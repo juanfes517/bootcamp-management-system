@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface ITechnologyPersistencePort {
 
-    Mono<Technology> save(Technology tecnology);
+    Mono<Technology> save(Technology technology);
 }

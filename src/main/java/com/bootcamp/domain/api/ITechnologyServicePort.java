@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface ITechnologyServicePort {
 
-    Mono<Technology> registerTecnology(Technology tecnology);
+    Mono<Technology> registerTechnology(Technology technology);
 }

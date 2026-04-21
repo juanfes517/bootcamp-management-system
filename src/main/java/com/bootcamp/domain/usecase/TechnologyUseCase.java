@@ -12,7 +12,7 @@ public class TechnologyUseCase implements ITechnologyServicePort {
     private final ITechnologyPersistencePort technologyPersistencePort;
 
     @Override
-    public Mono<Technology> registerTecnology(Technology technology) {
+    public Mono<Technology> registerTechnology(Technology technology) {
         return technologyPersistencePort.save(technology);
     }
 
