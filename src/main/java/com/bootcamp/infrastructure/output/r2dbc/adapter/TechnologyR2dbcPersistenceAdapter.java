@@ -21,4 +21,9 @@ public class TechnologyR2dbcPersistenceAdapter implements ITechnologyPersistence
                 .save(technologyMapper.toEntity(technology))
                 .map(technologyMapper::toDomain);
     }
+
+    @Override
+    public Mono<Boolean> existsByName(String name) {
+        return technologyRepository.existsByName(name);
+    }
 }
