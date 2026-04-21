@@ -2,7 +2,7 @@ package com.bootcamp.infrastructure.output.r2dbc.adapter;
 
 import com.bootcamp.domain.model.Technology;
 import com.bootcamp.domain.spi.ITechnologyPersistencePort;
-import com.bootcamp.infrastructure.output.r2dbc.helper.mapper.TechnologyMapper;
+import com.bootcamp.infrastructure.helper.mapper.TechnologyMapper;
 import com.bootcamp.infrastructure.output.r2dbc.repository.ITechnologyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
