@@ -2,6 +2,23 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'info.solidsoft.pitest' version '1.19.0'
+}
+
+pitest {
+	targetClasses = ['com.bootcamp.*']
+	targetTests = ['com.bootcamp.*']
+	mutationThreshold = 80
+	outputFormats = ['HTML']
+	failWhenNoMutations = false
+	junit5PluginVersion = '1.2.1'
+
+	excludedClasses = [
+			'com.bootcamp.BootcampManagementSystemApplication',
+			'com.bootcamp.infrastructure.config.*',
+			'com.bootcamp.infrastructure.helper.mapper.*',
+			'com.bootcamp.infrastructure.input.*'
+	]
 }
 
 group = 'com.bootcamp'
@@ -20,15 +37,24 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.2'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.2'
+	implementation 'org.mapstruct:mapstruct:1.6.3'
+	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+	runtimeOnly 'org.postgresql:r2dbc-postgresql'
+
+	compileOnly 'org.projectlombok:lombok'
+
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testCompileOnly 'org.projectlombok:lombok'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
