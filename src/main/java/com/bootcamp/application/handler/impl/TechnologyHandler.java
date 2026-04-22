@@ -5,9 +5,11 @@ import com.bootcamp.domain.api.ITechnologyServicePort;
 import com.bootcamp.domain.model.Technology;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TechnologyHandler implements ITechnologyHandler {
 
