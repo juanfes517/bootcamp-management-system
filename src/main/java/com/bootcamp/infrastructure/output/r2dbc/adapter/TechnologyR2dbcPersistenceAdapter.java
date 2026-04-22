@@ -6,7 +6,10 @@ import com.bootcamp.infrastructure.helper.mapper.TechnologyMapper;
 import com.bootcamp.infrastructure.output.r2dbc.repository.ITechnologyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,5 +28,11 @@ public class TechnologyR2dbcPersistenceAdapter implements ITechnologyPersistence
     @Override
     public Mono<Boolean> existsByName(String name) {
         return technologyRepository.existsByName(name);
+    }
+
+    @Override
+    public Flux<Technology> findAllByIds(List<Long> ids) {
+        return technologyRepository.findAllById(ids)
+                .map(technologyMapper::toDomain);
     }
 }
