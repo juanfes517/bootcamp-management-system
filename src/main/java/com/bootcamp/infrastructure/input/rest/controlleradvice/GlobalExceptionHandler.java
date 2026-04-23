@@ -1,6 +1,8 @@
 package com.bootcamp.infrastructure.input.rest.controlleradvice;
 
 import com.bootcamp.domain.helper.exception.DuplicateTechnologyException;
+import com.bootcamp.domain.helper.exception.TechnologyCountOutOfRangeException;
+import com.bootcamp.domain.helper.exception.TechnologyNotExistsExceptions;
 import com.bootcamp.infrastructure.input.rest.dto.response.ExceptionResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,35 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateTechnologyException.class)
     public ResponseEntity<ExceptionResponseDTO> handlerDuplicateTechnologyException(DuplicateTechnologyException e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(e.getDetails())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(TechnologyCountOutOfRangeException.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerTechnologyCountOutOfRangeException(
+            TechnologyCountOutOfRangeException e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(e.getDetails())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(TechnologyNotExistsExceptions.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerTechnologyNotExistsExceptions(TechnologyNotExistsExceptions e) {
         ExceptionResponseDTO response = ExceptionResponseDTO.builder()
                 .message(e.getMessage())
                 .statusCode(e.getStatusCode())

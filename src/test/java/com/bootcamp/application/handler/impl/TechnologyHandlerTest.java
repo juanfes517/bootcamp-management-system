@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +43,7 @@ class TechnologyHandlerTest {
 
     @Test
     void ShouldRegisterTechnologySuccessfully() {
-        when(technologyHandler.registerTechnology(validTechnology))
+        when(technologyServicePort.registerTechnology(validTechnology))
                 .thenReturn(Mono.just(createdTechnology));
 
         StepVerifier.create(technologyHandler.registerTechnology(validTechnology))

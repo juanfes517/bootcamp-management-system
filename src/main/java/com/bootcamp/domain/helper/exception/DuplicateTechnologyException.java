@@ -16,4 +16,10 @@ public class DuplicateTechnologyException extends RuntimeException {
         this.statusCode = DomainConstants.BAD_REQUEST_VALUE;
         this.details = Map.of(DomainConstants.NAME_STRING, name);
     }
+
+    public DuplicateTechnologyException(String message, String names) {
+        super(message);
+        this.statusCode = DomainConstants.BAD_REQUEST_VALUE;
+        this.details = Map.of(DomainConstants.IDS_STRING, names);
+    }
 }

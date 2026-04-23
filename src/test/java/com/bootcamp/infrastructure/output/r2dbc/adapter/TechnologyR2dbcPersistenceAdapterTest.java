@@ -10,8 +10,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -28,24 +31,23 @@ class TechnologyR2dbcPersistenceAdapterTest {
     @Mock
     private TechnologyMapper technologyMapper;
 
-    private static String emptyString;
     private static String validName;
     private static String invalidName;
-    private static String validDescription;
-    private static String invalidDescription;
     private static Technology createdTechnology;
     private static Technology newTechnology;
     private static TechnologyEntity validTechnologyEntity;
+    private static TechnologyEntity technologyEntity1;
+    private static TechnologyEntity technologyEntity2;
+    private static Technology technology1;
+    private static Technology technology2;
 
 
     @BeforeAll
     static void setUp() {
 
-        emptyString= "";
         validName = "Valid Name";
         invalidName = "Invalid Name";
-        validDescription = "Valid Description";
-        invalidDescription = "Invalid Description";
+        String validDescription = "Valid Description";
 
         newTechnology = Technology.builder()
                 .id(null)
@@ -62,6 +64,30 @@ class TechnologyR2dbcPersistenceAdapterTest {
         validTechnologyEntity = TechnologyEntity.builder()
                 .id(1L)
                 .name(validName)
+                .description(validDescription)
+                .build();
+
+        technologyEntity1 = TechnologyEntity.builder()
+                .id(2L)
+                .name(validName + "2")
+                .description(validDescription)
+                .build();
+
+        technologyEntity2 = TechnologyEntity.builder()
+                .id(3L)
+                .name(validName + "3")
+                .description(validDescription)
+                .build();
+
+        technology1 = Technology.builder()
+                .id(2L)
+                .name(validName + "2")
+                .description(validDescription)
+                .build();
+
+        technology2 = Technology.builder()
+                .id(3L)
+                .name(validName + "3")
                 .description(validDescription)
                 .build();
     }
@@ -104,6 +130,59 @@ class TechnologyR2dbcPersistenceAdapterTest {
 
         StepVerifier.create(adapter.existsByName(invalidName))
                 .expectNext(false)
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void shouldReturnAllTechnologies() {
+        List<Long> technologiesId = List.of(2L, 3L);
+
+        when(technologyRepository.findAllById(technologiesId))
+                .thenReturn(Flux.just(technologyEntity1, technologyEntity2));
+        when(technologyMapper.toDomain(technologyEntity1))
+                .thenReturn(technology1);
+        when(technologyMapper.toDomain(technologyEntity2))
+                .thenReturn(technology2);
+
+        StepVerifier.create(adapter.findAllByIds(technologiesId))
+                .expectNextMatches(technology -> technology.getId().equals(2L) &&
+                                                 technology.getName().equals(technologyEntity1.getName()) &&
+                                                 technology.getDescription().equals(technologyEntity1.getDescription()))
+                .expectNextMatches(technology -> technology.getId().equals(3L) &&
+                                                 technology.getName().equals(technologyEntity2.getName()) &&
+                                                 technology.getDescription().equals(technologyEntity2.getDescription()))
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void shouldReturnPartialTechnologies() {
+        List<Long> technologiesId = List.of(2L, 99L);
+
+        when(technologyRepository.findAllById(technologiesId))
+                .thenReturn(Flux.just(technologyEntity1));
+        when(technologyMapper.toDomain(technologyEntity1))
+                .thenReturn(technology1);
+
+        StepVerifier.create(adapter.findAllByIds(technologiesId))
+                .expectNextMatches(technology -> technology.getId().equals(2L) &&
+                                                 technology.getName().equals(technologyEntity1.getName()) &&
+                                                 technology.getDescription().equals(technologyEntity1.getDescription()))
+                .expectNextCount(0)
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    void shouldReturnVoidTechnologies() {
+        List<Long> technologiesId = List.of(100L, 99L);
+
+        when(technologyRepository.findAllById(technologiesId))
+                .thenReturn(Flux.empty());
+
+        StepVerifier.create(adapter.findAllByIds(technologiesId))
+                .expectNextCount(0)
                 .expectComplete()
                 .verify();
     }
