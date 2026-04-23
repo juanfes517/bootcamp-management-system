@@ -10,7 +10,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CapabilityMapper {
 
+    @Mapping(target = "technologyList", ignore = true)
     Capability toDomain(CapabilityEntity capabilityEntity);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "technologyList", ignore = true)
     Capability toDomain(CapabilityRequestDTO capabilityRequestDTO);
     CapabilityEntity toEntity(Capability capability);
     CapabilityResponseDTO toResponseDTO(Capability capability);

@@ -12,4 +12,6 @@ public class DomainConstants {
     public static final String NAME_STRING = "name";
     public static final String IDS_STRING = "IDs";
     public static final String SUBMITTED_TECHNOLOGIES_STRING = "submitted technologies";
+    public static final int LOWER_LIMIT = 3;
+    public static final int UPPER_LIMIT = 20;
 }

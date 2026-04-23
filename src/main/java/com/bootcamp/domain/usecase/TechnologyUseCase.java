@@ -57,7 +57,7 @@ public class TechnologyUseCase implements ITechnologyServicePort {
     }
 
     private Mono<List<Long>> validateTechnologyLimits(List<Long> technologies) {
-        if (technologies.size() < 3 || technologies.size() > 20) {
+        if (technologies.size() < DomainConstants.LOWER_LIMIT || technologies.size() > DomainConstants.UPPER_LIMIT) {
             return Mono.error(new TechnologyCountOutOfRangeException(
                     DomainConstants.TECHNOLOGY_LIMITS_MESSAGE,
                     technologies.size()));
