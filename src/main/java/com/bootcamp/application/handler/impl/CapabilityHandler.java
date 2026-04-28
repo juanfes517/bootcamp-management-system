@@ -5,9 +5,11 @@ import com.bootcamp.domain.api.ICapabilityServicePort;
 import com.bootcamp.domain.api.ITechnologyCapabilityServicePort;
 import com.bootcamp.domain.api.ITechnologyServicePort;
 import com.bootcamp.domain.model.Capability;
+import com.bootcamp.domain.model.PageRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -32,5 +34,10 @@ public class CapabilityHandler implements ICapabilityHandler {
                                 .thenReturn(savedCapability))
                         .doOnNext(savedCapability -> savedCapability.setTechnologyList(validTechnologies))
                 );
+    }
+
+    @Override
+    public Flux<Capability> getAllCapabilities(PageRequest pageRequest) {
+        return capabilityServicePort.getAllCapabilities(pageRequest);
     }
 }
