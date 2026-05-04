@@ -1,8 +1,6 @@
 package com.bootcamp.infrastructure.input.rest.controlleradvice;
 
-import com.bootcamp.domain.helper.exception.DuplicateTechnologyException;
-import com.bootcamp.domain.helper.exception.TechnologyCountOutOfRangeException;
-import com.bootcamp.domain.helper.exception.TechnologyNotExistsExceptions;
+import com.bootcamp.domain.helper.exception.*;
 import com.bootcamp.infrastructure.input.rest.dto.response.ExceptionResponseDTO;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -49,8 +47,37 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(CapabilityCountOutOfRangeException.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerTechnologyCountOutOfRangeException(
+            CapabilityCountOutOfRangeException e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(e.getDetails())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
     @ExceptionHandler(TechnologyNotExistsExceptions.class)
     public ResponseEntity<ExceptionResponseDTO> handlerTechnologyNotExistsExceptions(TechnologyNotExistsExceptions e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(e.getDetails())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(CapabilityNotExistsExceptions.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerCapabilityNotExistsExceptions(CapabilityNotExistsExceptions e) {
         ExceptionResponseDTO response = ExceptionResponseDTO.builder()
                 .message(e.getMessage())
                 .statusCode(e.getStatusCode())

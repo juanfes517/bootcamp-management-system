@@ -9,7 +9,10 @@ public class DtoConstants {
     public static final String THE_ID_IS_REQUIRED_MESSAGE = "The ID is required";
     public static final String THE_NAME_IS_REQUIRED_MESSAGE = "The name is required";
     public static final String THE_DESCRIPTION_IS_REQUIRED_MESSAGE = "The description is required";
+    public static final String THE_RELEASE_DATE_IS_REQUIRED_MESSAGE = "The release date is required";
+    public static final String THE_DURATION_IS_REQUIRED_MESSAGE = "The duration is required";
     public static final String THE_TECHNOLOGIES_IDS_IS_REQUIRED_MESSAGE = "Technologies are required";
+    public static final String THE_CAPABILITIES_IDS_IS_REQUIRED_MESSAGE = "Capabilities are required";
     public static final int TECHNOLOGY_NAME_LIMIT = 50;
     public static final int TECHNOLOGY_DESCRIPTION_LIMIT = 90;
 }
