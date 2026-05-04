@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -39,6 +40,17 @@ public class CapabilityR2dbcPersistenceAdapter implements ICapabilityPersistence
         return databaseClient.sql(sqlQuery)
                 .bind(SqlConstants.SIZE_STRING, pageRequest.getSize())
                 .bind(SqlConstants.OFFSET_STRING, offset)
+                .fetch()
+                .all()
+                .bufferUntilChanged(row -> row.get(SqlConstants.CAPABILITY_ID))
+                .map(this::buildCapability);
+    }
+
+    @Override
+    public Flux<Capability> findAllByIdsWithTechnologies(List<Long> capabilitiesIds) {
+        return databaseClient
+                .sql(SqlConstants.FIND_ALL_CAPABILITIES_BY_IDS)
+                .bind("ids", capabilitiesIds)
                 .fetch()
                 .all()
                 .bufferUntilChanged(row -> row.get(SqlConstants.CAPABILITY_ID))

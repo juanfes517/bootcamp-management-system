@@ -47,6 +47,15 @@ public class SqlConstants {
             ORDER BY c.technology_count %s, c.id, t.id
             """;
 
+    public static final String FIND_ALL_CAPABILITIES_BY_IDS = """
+            SELECT c.id AS capability_id, c.name AS capability_name, c.description AS capability_description,\s
+                    t.id AS technology_id, t.name AS technology_name, t.description AS technology_description
+            FROM capability c
+            LEFT JOIN technology_capability tc ON c.id = tc.capability_id
+            LEFT JOIN technology t ON tc.technology_id = t.id
+            WHERE c.id IN (:ids)
+            """;
+
     public static final String CAPABILITY_ID = "capability_id";
     public static final String SIZE_STRING = "size";
     public static final String OFFSET_STRING = "offset";
