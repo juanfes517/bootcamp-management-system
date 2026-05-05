@@ -1,5 +1,8 @@
 package com.bootcamp.domain.usecase;
 
+import com.bootcamp.domain.helper.constant.DomainConstants;
+import com.bootcamp.domain.helper.exception.CapabilityCountOutOfRangeException;
+import com.bootcamp.domain.helper.exception.CapabilityNotExistsExceptions;
 import com.bootcamp.domain.model.Capability;
 import com.bootcamp.domain.model.PageRequest;
 import com.bootcamp.domain.model.Technology;
@@ -86,6 +89,61 @@ class CapabilityUseCaseTest {
         StepVerifier.create(capabilityUseCase.getAllCapabilities(pageRequest))
                 .expectNextMatches(capability -> capability.getId().equals(capability1.getId()))
                 .expectNextMatches(capability -> capability.getId().equals(capability2.getId()))
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldThrowCapabilityCountOutOfRangeExceptionWhenCapabilityIdsSizeIsEmpty() {
+        List<Long> capabilityIds = List.of();
+
+        StepVerifier.create(capabilityUseCase.validateBootcampCapabilities(capabilityIds))
+                .expectErrorMatches(error -> error instanceof CapabilityCountOutOfRangeException &&
+                                             error.getMessage().equals(DomainConstants.CAPABILITY_LIMITS_MESSAGE))
+                .verify();
+    }
+
+    @Test
+    void shouldThrowCapabilityCountOutOfRangeExceptionWhenCapabilityIdsSizeIsGreaterThanMaximum() {
+        List<Long> capabilityIds = List.of(1L, 2L, 3L, 4L, 5L);
+
+        StepVerifier.create(capabilityUseCase.validateBootcampCapabilities(capabilityIds))
+                .expectErrorMatches(error -> error instanceof CapabilityCountOutOfRangeException &&
+                                             error.getMessage().equals(DomainConstants.CAPABILITY_LIMITS_MESSAGE))
+                .verify();
+    }
+
+    @Test
+    void shouldThrowCapabilityNotExistsExceptionsWhenAtLessCapabilityDoesNotExist() {
+        List<Long> capabilityIds = List.of(1L, 2L, 3L);
+
+        Capability capability1 = Capability.builder()
+                .id(1L)
+                .build();
+
+        when(capabilityPersistencePort.findAllByIdsWithTechnologies(capabilityIds))
+                .thenReturn(Flux.just(capability1));
+
+        StepVerifier.create(capabilityUseCase.validateBootcampCapabilities(capabilityIds))
+                .expectErrorMatches(error -> error instanceof CapabilityNotExistsExceptions &&
+                                             error.getMessage().equals(DomainConstants.CAPABILITIES_NOT_EXISTS_MESSAGE))
+                .verify();
+    }
+
+    @Test
+    void shouldValidateCapabilitiesExistWhenThereAreExactlyFour() {
+        List<Long> capabilityIds = List.of(1L, 2L, 3L, 4L);
+
+        List<Capability> foundCapabilities = capabilityIds.stream()
+                .map(id -> Capability.builder()
+                        .id(id)
+                        .build())
+                .toList();
+
+        when(capabilityPersistencePort.findAllByIdsWithTechnologies(capabilityIds))
+                .thenReturn(Flux.fromIterable(foundCapabilities));
+
+        StepVerifier.create(capabilityUseCase.validateBootcampCapabilities(capabilityIds))
+                .expectNextMatches(capabilities -> capabilities.size() == capabilityIds.size())
                 .verifyComplete();
     }
 

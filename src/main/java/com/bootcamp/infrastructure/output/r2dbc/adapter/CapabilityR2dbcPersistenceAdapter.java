@@ -45,6 +45,17 @@ public class CapabilityR2dbcPersistenceAdapter implements ICapabilityPersistence
                 .map(this::buildCapability);
     }
 
+    @Override
+    public Flux<Capability> findAllByIdsWithTechnologies(List<Long> capabilitiesIds) {
+        return databaseClient
+                .sql(SqlConstants.FIND_ALL_CAPABILITIES_BY_IDS)
+                .bind("ids", capabilitiesIds)
+                .fetch()
+                .all()
+                .bufferUntilChanged(row -> row.get(SqlConstants.CAPABILITY_ID))
+                .map(this::buildCapability);
+    }
+
     private String getQuery(PageRequest pageRequest) {
         PageRequest.SortBy sortBy = pageRequest.getSortBy();
         PageRequest.SortOrder sortOrder = pageRequest.getSortOrder();

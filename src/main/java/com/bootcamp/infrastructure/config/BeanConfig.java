@@ -1,14 +1,8 @@
 package com.bootcamp.infrastructure.config;
 
-import com.bootcamp.domain.api.ICapabilityServicePort;
-import com.bootcamp.domain.api.ITechnologyCapabilityServicePort;
-import com.bootcamp.domain.api.ITechnologyServicePort;
-import com.bootcamp.domain.spi.ICapabilityPersistencePort;
-import com.bootcamp.domain.spi.ITechnologyCapabilityPersistencePort;
-import com.bootcamp.domain.spi.ITechnologyPersistencePort;
-import com.bootcamp.domain.usecase.CapabilityUseCase;
-import com.bootcamp.domain.usecase.TechnologyCapabilityUseCase;
-import com.bootcamp.domain.usecase.TechnologyUseCase;
+import com.bootcamp.domain.api.*;
+import com.bootcamp.domain.spi.*;
+import com.bootcamp.domain.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,5 +23,16 @@ public class BeanConfig {
     public ITechnologyCapabilityServicePort technologyCapabilityServicePort(
             ITechnologyCapabilityPersistencePort technologyCapabilityPersistencePort) {
         return new TechnologyCapabilityUseCase(technologyCapabilityPersistencePort);
+    }
+
+    @Bean
+    public IBootcampServicePort bootcampServicePort(IBootcampPersistencePort bootcampPersistencePort) {
+        return new BootcampUseCase(bootcampPersistencePort);
+    }
+
+    @Bean
+    public ICapabilityBootcampServicePort capabilityBootcampServicePort(
+            ICapabilityBootcampPersistencePort capabilityBootcampPersistencePort) {
+        return new CapabilityBootcampUseCase(capabilityBootcampPersistencePort);
     }
 }
