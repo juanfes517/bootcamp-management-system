@@ -2,7 +2,6 @@ package com.bootcamp.infrastructure.output.r2dbc.adapter;
 
 import com.bootcamp.domain.model.Capability;
 import com.bootcamp.domain.model.PageRequest;
-import com.bootcamp.domain.model.Technology;
 import com.bootcamp.infrastructure.helper.constant.SqlConstants;
 import com.bootcamp.infrastructure.helper.mapper.CapabilityMapper;
 import com.bootcamp.infrastructure.output.r2dbc.entity.CapabilityEntity;
@@ -350,5 +349,30 @@ class CapabilityR2dbcPersistenceAdapterTest {
                 .verifyComplete();
 
         verify(executeSpec).bind("offset", 6);
+    }
+
+    @Test
+    void shouldFindAllCapabilitiesByIdsWithTechnologiesSuccessfully() {
+        List<Long> capabilitiesIds = List.of(1L, 3L);
+
+        when(databaseClient.sql(anyString())).thenReturn(executeSpec);
+        when(executeSpec.bind(anyString(), any())).thenReturn(executeSpec);
+        when(executeSpec.fetch()).thenReturn(fetchSpec);
+        when(fetchSpec.all()).thenReturn(Flux.just(
+                capability1Row1, capability1Row2, capability3Row4, capability3Row5, capability3Row6));
+
+        StepVerifier.create(adapter.findAllByIdsWithTechnologies(capabilitiesIds))
+                .expectNextMatches(c -> c.getId().equals(1L) &&
+                                        c.getTechnologyList().size() == 2 &&
+                                        c.getTechnologyList().get(0).getId().equals(1L) &&
+                                        c.getTechnologyList().get(1).getId().equals(2L))
+                .expectNextMatches(c -> c.getId().equals(3L) &&
+                                        c.getTechnologyList().size() == 3 &&
+                                        c.getTechnologyList().get(0).getId().equals(1L) &&
+                                        c.getTechnologyList().get(1).getId().equals(2L) &&
+                                        c.getTechnologyList().get(2).getId().equals(3L))
+                .verifyComplete();
+
+        verify(databaseClient).sql(contains("WHERE c.id IN"));
     }
 }

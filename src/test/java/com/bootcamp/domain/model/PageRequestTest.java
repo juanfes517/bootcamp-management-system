@@ -9,8 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PageRequestTest {
 
-    private PageRequest pageRequest;
-
     @Test
     void shouldReturnNullWhenValueIsNullInSortBy() {
         String value = null;
