@@ -180,6 +180,37 @@ class CapabilityR2dbcPersistenceAdapterTest {
     }
 
     @Test
+    void shouldGetAllCapabilitiesWhenSortByIsOtherValue() {
+        PageRequest pageRequest = PageRequest.builder()
+                .page(0)
+                .size(3)
+                .sortBy("Other")
+                .build();
+
+        when(databaseClient.sql(anyString())).thenReturn(executeSpec);
+        when(executeSpec.bind(anyString(), any())).thenReturn(executeSpec);
+        when(executeSpec.fetch()).thenReturn(fetchSpec);
+        when(fetchSpec.all()).thenReturn(Flux.just(
+                capability1Row1, capability1Row2, capability2Row3, capability3Row4, capability3Row5, capability3Row6));
+
+        StepVerifier.create(adapter.findAll(pageRequest))
+                .expectNextMatches(c -> c.getId().equals(1L) &&
+                                        c.getTechnologyList().size() == 2 &&
+                                        c.getTechnologyList().get(0).getId().equals(1L) &&
+                                        c.getTechnologyList().get(1).getId().equals(2L))
+                .expectNextMatches(c -> c.getId().equals(2L) &&
+                                        c.getTechnologyList().isEmpty())
+                .expectNextMatches(c -> c.getId().equals(3L) &&
+                                        c.getTechnologyList().size() == 3 &&
+                                        c.getTechnologyList().get(0).getId().equals(1L) &&
+                                        c.getTechnologyList().get(1).getId().equals(2L) &&
+                                        c.getTechnologyList().get(2).getId().equals(3L))
+                .verifyComplete();
+
+        verify(databaseClient).sql(startsWith("SELECT c.id"));
+    }
+
+    @Test
     void shouldReturnOneCapabilityWithoutTechnologies() {
         PageRequest pageRequest = PageRequest.builder()
                 .page(1)
@@ -204,7 +235,7 @@ class CapabilityR2dbcPersistenceAdapterTest {
         PageRequest pageRequest = PageRequest.builder()
                 .page(0)
                 .size(3)
-                .sortBy(PageRequest.SortBy.NAME)
+                .sortBy("name")
                 .sortOrder(PageRequest.SortOrder.ASC)
                 .build();
 
@@ -236,7 +267,7 @@ class CapabilityR2dbcPersistenceAdapterTest {
         PageRequest pageRequest = PageRequest.builder()
                 .page(0)
                 .size(3)
-                .sortBy(PageRequest.SortBy.NAME)
+                .sortBy("name")
                 .sortOrder(PageRequest.SortOrder.DESC)
                 .build();
 
@@ -268,7 +299,7 @@ class CapabilityR2dbcPersistenceAdapterTest {
         PageRequest pageRequest = PageRequest.builder()
                 .page(0)
                 .size(3)
-                .sortBy(PageRequest.SortBy.TECHNOLOGY_COUNT)
+                .sortBy("technology_count")
                 .sortOrder(PageRequest.SortOrder.ASC)
                 .build();
 
@@ -300,7 +331,7 @@ class CapabilityR2dbcPersistenceAdapterTest {
         PageRequest pageRequest = PageRequest.builder()
                 .page(0)
                 .size(3)
-                .sortBy(PageRequest.SortBy.TECHNOLOGY_COUNT)
+                .sortBy("technology_count")
                 .sortOrder(PageRequest.SortOrder.DESC)
                 .build();
 

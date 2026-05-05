@@ -9,43 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PageRequestTest {
 
-    @Test
-    void shouldReturnNullWhenValueIsNullInSortBy() {
-        String value = null;
-        PageRequest.SortBy result = PageRequest.SortBy.fromString(value);
-        assertNull(result);
-    }
-
-    @Test
-    void shouldReturnNullWhenValueIsBlankInSortBy() {
-        String value = "";
-        PageRequest.SortBy result = PageRequest.SortBy.fromString(value);
-        assertNull(result);
-    }
-
-    @Test
-    void shouldReturnNameWhenValueIsName() {
-        String value = "name";
-        PageRequest.SortBy result = PageRequest.SortBy.fromString(value);
-        assertEquals(PageRequest.SortBy.NAME, result);
-    }
-
-    @Test
-    void shouldReturnTechnologyCountWhenValueIsTechnologyCount() {
-        String value = "technologyCount";
-        PageRequest.SortBy result = PageRequest.SortBy.fromString(value);
-        assertEquals(PageRequest.SortBy.TECHNOLOGY_COUNT, result);
-    }
-
-    @Test
-    void shouldThrowIllegalArgumentExceptionWhenValueIsInvalidInSortBy() {
-        String value = "invalid value";
-        IllegalArgumentException result = assertThrows(
-                IllegalArgumentException.class,
-                () -> PageRequest.SortBy.fromString(value));
-        assertEquals("Invalid sortBy value: " + value, result.getMessage());
-    }
-
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"asc", "ASC", "Asc"})

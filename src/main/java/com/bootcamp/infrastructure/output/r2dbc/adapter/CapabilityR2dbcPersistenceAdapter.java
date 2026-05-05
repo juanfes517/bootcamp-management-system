@@ -57,16 +57,17 @@ public class CapabilityR2dbcPersistenceAdapter implements ICapabilityPersistence
     }
 
     private String getQuery(PageRequest pageRequest) {
-        PageRequest.SortBy sortBy = pageRequest.getSortBy();
+        String sortBy = pageRequest.getSortBy();
         PageRequest.SortOrder sortOrder = pageRequest.getSortOrder();
 
         if (sortBy == null) return SqlConstants.FIND_ALL_QUERY;
 
-        return switch (sortBy) {
-            case NAME -> SqlConstants.FIND_ALL_BY_NAME_QUERY
+        return switch (sortBy.toLowerCase()) {
+            case "name" -> SqlConstants.FIND_ALL_BY_NAME_QUERY
                     .formatted(sortOrder.name(), sortOrder.name());
-            case TECHNOLOGY_COUNT -> SqlConstants.FIND_ALL_BY_TECHNOLOGY_COUNT_QUERY
+            case "technology_count" -> SqlConstants.FIND_ALL_BY_TECHNOLOGY_COUNT_QUERY
                     .formatted(sortOrder.name(), sortOrder.name());
+            default -> SqlConstants.FIND_ALL_QUERY;
         };
     }
 
