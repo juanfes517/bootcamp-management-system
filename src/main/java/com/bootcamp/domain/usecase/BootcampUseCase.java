@@ -2,8 +2,10 @@ package com.bootcamp.domain.usecase;
 
 import com.bootcamp.domain.api.IBootcampServicePort;
 import com.bootcamp.domain.model.Bootcamp;
+import com.bootcamp.domain.model.PageRequest;
 import com.bootcamp.domain.spi.IBootcampPersistencePort;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -14,5 +16,10 @@ public class BootcampUseCase implements IBootcampServicePort {
     @Override
     public Mono<Bootcamp> registerBootcamp(Bootcamp bootcamp) {
         return bootcampPersistencePort.save(bootcamp);
+    }
+
+    @Override
+    public Flux<Bootcamp> getAllBootcamps(PageRequest pageRequest) {
+        return bootcampPersistencePort.findAll(pageRequest);
     }
 }

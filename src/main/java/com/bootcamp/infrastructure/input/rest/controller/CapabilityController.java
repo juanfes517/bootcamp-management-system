@@ -7,6 +7,7 @@ import com.bootcamp.infrastructure.helper.constant.ApiConstants;
 import com.bootcamp.infrastructure.helper.mapper.CapabilityMapper;
 import com.bootcamp.infrastructure.input.rest.dto.request.CapabilityRequestDTO;
 import com.bootcamp.infrastructure.input.rest.dto.response.CapabilityResponseDTO;
+import com.bootcamp.infrastructure.input.rest.enums.CapabilitySortBy;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -43,10 +44,11 @@ public class CapabilityController {
             @RequestParam(defaultValue = ApiConstants.DEFAULT_SIZE) @Min(1) int size,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder) {
+        CapabilitySortBy.fromString(sortBy);
         PageRequest pageRequest = PageRequest.builder()
                 .page(page)
                 .size(size)
-                .sortBy(PageRequest.SortBy.fromString(sortBy))
+                .sortBy(sortBy)
                 .sortOrder(PageRequest.SortOrder.fromString(sortOrder))
                 .build();
         return capabilityHandler.getAllCapabilities(pageRequest)
