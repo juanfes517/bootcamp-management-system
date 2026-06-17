@@ -1,5 +1,6 @@
 package com.bootcamp.infrastructure.output.r2dbc.adapter;
 
+import com.bootcamp.domain.helper.exception.BootcampNotExistsException;
 import com.bootcamp.domain.model.Bootcamp;
 import com.bootcamp.domain.model.Capability;
 import com.bootcamp.domain.model.PageRequest;
@@ -47,6 +48,13 @@ public class BootcampR2dbcPersistenceAdapter implements IBootcampPersistencePort
                 .all()
                 .bufferUntilChanged(row -> row.get(SqlConstants.BOOTCAMP_ID))
                 .map(this::buildBootcamp);
+    }
+
+    @Override
+    public Mono<Bootcamp> findById(Long id) {
+        return bootcampRepository.findById(id)
+                .map(bootcampMapper::toDomain)
+                .switchIfEmpty(Mono.error(new BootcampNotExistsException(id)));
     }
 
     private Bootcamp buildBootcamp(List<Map<String, Object>> rows) {

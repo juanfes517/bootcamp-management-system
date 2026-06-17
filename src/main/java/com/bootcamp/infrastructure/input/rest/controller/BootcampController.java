@@ -6,7 +6,9 @@ import com.bootcamp.domain.model.PageRequest;
 import com.bootcamp.infrastructure.helper.constant.ApiConstants;
 import com.bootcamp.infrastructure.helper.mapper.BootcampMapper;
 import com.bootcamp.infrastructure.input.rest.dto.request.BootcampRequestDTO;
+import com.bootcamp.infrastructure.input.rest.dto.request.UserBootcampRegistrationRequestDTO;
 import com.bootcamp.infrastructure.input.rest.dto.response.BootcampResponseDTO;
+import com.bootcamp.infrastructure.input.rest.dto.response.RegistrationResultResponseDTO;
 import com.bootcamp.infrastructure.input.rest.enums.BootcampSortBy;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -57,5 +59,12 @@ public class BootcampController {
         return bootcampHandler
                 .getAllBootcamps(pageRequest)
                 .map(bootcampMapper::toResponse);
+    }
+
+    @PostMapping("/user")
+    public Flux<RegistrationResultResponseDTO> registerUser(
+            @Valid @RequestBody UserBootcampRegistrationRequestDTO registrationRequestDTO) {
+        return bootcampHandler.registerUser(bootcampMapper.toUserBootcampRegistration(registrationRequestDTO))
+                .map(bootcampMapper::toRegistrationResultResponseDTO);
     }
 }

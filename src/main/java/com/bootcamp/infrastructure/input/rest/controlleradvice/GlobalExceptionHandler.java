@@ -48,8 +48,23 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CapabilityCountOutOfRangeException.class)
-    public ResponseEntity<ExceptionResponseDTO> handlerTechnologyCountOutOfRangeException(
+    public ResponseEntity<ExceptionResponseDTO> handlerCapabilityCountOutOfRangeException(
             CapabilityCountOutOfRangeException e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(e.getDetails())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(BootcampCountOutOfRangeException.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerBootcampCountOutOfRangeException(
+            BootcampCountOutOfRangeException e) {
         ExceptionResponseDTO response = ExceptionResponseDTO.builder()
                 .message(e.getMessage())
                 .statusCode(e.getStatusCode())
@@ -90,6 +105,48 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(BootcampNotExistsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerBootcampNotExistsException(BootcampNotExistsException e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(Map.of("id", String.valueOf(e.getMissingId())))
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(UserNotExistsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerUserNotExistsException(UserNotExistsException e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(e.getDetails())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(DuplicateBootcampsException.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerDuplicateBootcampsException(DuplicateBootcampsException e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .statusCode(e.getStatusCode())
+                .details(e.getDetails())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionResponseDTO> handlerConstraintViolationException (ConstraintViolationException  e) {
         ExceptionResponseDTO response = ExceptionResponseDTO.builder()
@@ -113,6 +170,20 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(DateConflictException.class)
+    public ResponseEntity<ExceptionResponseDTO> handlerDateConflictException (DateConflictException  e) {
+        ExceptionResponseDTO response = ExceptionResponseDTO.builder()
+                .message(e.getMessage())
+                .details(e.getDetails())
+                .statusCode(e.getStatusCode())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(response);
     }
 

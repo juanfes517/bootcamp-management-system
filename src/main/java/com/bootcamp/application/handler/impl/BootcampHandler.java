@@ -6,6 +6,8 @@ import com.bootcamp.domain.api.ICapabilityBootcampServicePort;
 import com.bootcamp.domain.api.ICapabilityServicePort;
 import com.bootcamp.domain.model.Bootcamp;
 import com.bootcamp.domain.model.PageRequest;
+import com.bootcamp.domain.model.RegistrationResult;
+import com.bootcamp.domain.model.UserBootcampRegistration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,11 @@ public class BootcampHandler implements IBootcampHandler {
     @Override
     public Flux<Bootcamp> getAllBootcamps(PageRequest pageRequest) {
         return bootcampService.getAllBootcamps(pageRequest);
+    }
+
+    @Override
+    public Flux<RegistrationResult> registerUser(UserBootcampRegistration userBootcampRegistration) {
+        return bootcampService.registerUser(userBootcampRegistration);
     }
 
 }

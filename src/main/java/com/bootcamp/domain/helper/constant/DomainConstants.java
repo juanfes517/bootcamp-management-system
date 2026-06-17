@@ -7,14 +7,25 @@ public class DomainConstants {
     public static final String DUPLICATE_TECHNOLOGY_MESSAGE = "A technology with that name already exists";
     public static final String DUPLICATE_TECHNOLOGIES_FOUND_MESSAGE = "Duplicate technologies found";
     public static final String TECHNOLOGIES_NOT_EXISTS_MESSAGE = "One or more of the technologies listed do not exist";
+    public static final String USER_NOT_EXISTS_MESSAGE = "The user not exist";
     public static final String CAPABILITIES_NOT_EXISTS_MESSAGE = "One or more of the capabilities listed do not exist";
+    public static final String BOOTCAMP_NOT_EXIST_MESSAGE = "The bootcamp doesn't exist";
+    public static final String DATE_CONFLICT_MESSAGE = "Bootcamps cannot overlap in terms of dates and duration";
     public static final String TECHNOLOGY_LIMITS_MESSAGE = "The number of technologies must be between 3 and 20";
     public static final String CAPABILITY_LIMITS_MESSAGE = "The number of capabilities must be between 1 and 4";
+    public static final String BOOTCAMP_LIMITS_MESSAGE = "The number of bootcamps must be between 1 and 5";
+    public static final String DUPLICATE_BOOTCAMP_MESSAGE = "You cannot sign up for the same bootcamp twice";
     public static final String BAD_REQUEST_VALUE = "400";
+    public static final String NOT_FOUND_VALUE = "404";
+    public static final String CONFLICT_VALUE = "409";
     public static final String NAME_STRING = "name";
     public static final String IDS_STRING = "IDs";
     public static final String SUBMITTED_TECHNOLOGIES_STRING = "submitted technologies";
+    public static final String EMAIL_STRING = "email";
     public static final String SUBMITTED_CAPABILITIES_STRING = "submitted capabilities";
+    public static final String CONFLICT_BOOTCAMPS_STRING = "Bootcamps conflict";
+    public static final String SUBMITTED_BOOTCAMPS_STRING = "submitted bootcamps";
+    public static final String DUPLICATE_VALUES_STRING = "duplicate values";
     public static final int LOWER_LIMIT = 3;
     public static final int UPPER_LIMIT = 20;
 }
