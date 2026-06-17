@@ -3,10 +3,7 @@ package com.bootcamp.application.handler.impl;
 import com.bootcamp.domain.api.IBootcampServicePort;
 import com.bootcamp.domain.api.ICapabilityBootcampServicePort;
 import com.bootcamp.domain.api.ICapabilityServicePort;
-import com.bootcamp.domain.model.Bootcamp;
-import com.bootcamp.domain.model.Capability;
-import com.bootcamp.domain.model.PageRequest;
-import com.bootcamp.domain.model.Technology;
+import com.bootcamp.domain.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -125,5 +122,34 @@ class BootcampHandlerTest {
                 .expectNextMatches(bootcamp -> bootcamp.getId().equals(bootcamp1.getId()))
                 .expectNextMatches(bootcamp -> bootcamp.getId().equals(bootcamp2.getId()))
                 .verifyComplete();
+    }
+
+    @Test
+    void shouldRegisterUserSuccessfully() {
+        UserBootcampRegistration userBootcampRegistration = UserBootcampRegistration.builder()
+                .email("test@email.com")
+                .bootcampIds(List.of(1L, 2L))
+                .build();
+
+        RegistrationResult registrationResult1 = RegistrationResult.builder()
+                .bootcamp(Bootcamp.builder().id(1L).build())
+                .success(true)
+                .errorMessage(null)
+                .build();
+
+        RegistrationResult registrationResult2 = RegistrationResult.builder()
+                .bootcamp(Bootcamp.builder().id(2L).build())
+                .success(true)
+                .errorMessage(null)
+                .build();
+
+        when(bootcampService.registerUser(userBootcampRegistration))
+                .thenReturn(Flux.just(registrationResult1, registrationResult2));
+
+        StepVerifier.create(bootcampHandler.registerUser(userBootcampRegistration))
+                .expectNextMatches(result -> ((Bootcamp) result.getBootcamp()).getId() == 1L)
+                .expectNextMatches(result -> ((Bootcamp) result.getBootcamp()).getId() == 2L)
+                .verifyComplete();
+
     }
 }

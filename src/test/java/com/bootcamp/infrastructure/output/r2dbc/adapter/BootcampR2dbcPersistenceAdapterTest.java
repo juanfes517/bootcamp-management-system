@@ -1,5 +1,7 @@
 package com.bootcamp.infrastructure.output.r2dbc.adapter;
 
+import com.bootcamp.domain.helper.constant.DomainConstants;
+import com.bootcamp.domain.helper.exception.BootcampNotExistsException;
 import com.bootcamp.domain.model.Bootcamp;
 import com.bootcamp.domain.model.PageRequest;
 import com.bootcamp.infrastructure.helper.constant.SqlConstants;
@@ -361,5 +363,46 @@ class BootcampR2dbcPersistenceAdapterTest {
                 .verifyComplete();
 
         verify(databaseClient).sql(eq(SqlConstants.FIND_ALL_BOOTCAMPS));
+    }
+
+    @Test
+    void shouldFindByIdSuccessfully() {
+        Long id = 1L;
+
+        Bootcamp bootcamp = Bootcamp.builder()
+                .id(id)
+                .description("Description 1")
+                .releaseDate(LocalDateTime.now())
+                .durationDays(10)
+                .build();
+
+        BootcampEntity bootcampEntity = BootcampEntity.builder()
+                .id(id)
+                .description("Description 1")
+                .releaseDate(LocalDateTime.now())
+                .durationDays(10)
+                .build();
+
+        when(bootcampRepository.findById(id))
+                .thenReturn(Mono.just(bootcampEntity));
+        when(bootcampMapper.toDomain(bootcampEntity))
+                .thenReturn(bootcamp);
+
+        StepVerifier.create(adapter.findById(id))
+                .expectNextMatches(resultBootcamp -> resultBootcamp.getId().equals(bootcamp.getId()))
+                .verifyComplete();
+    }
+
+    @Test
+    void shouldThrowBootcampNotExistsException() {
+        Long idDosNotExist = 111L;
+
+        when(bootcampRepository.findById(idDosNotExist))
+                .thenReturn(Mono.error(new BootcampNotExistsException(idDosNotExist)));
+
+        StepVerifier.create(adapter.findById(idDosNotExist))
+                .expectErrorMatches(error -> error instanceof BootcampNotExistsException &&
+                        error.getMessage().equals(DomainConstants.BOOTCAMP_NOT_EXIST_MESSAGE))
+                .verify();
     }
 }
