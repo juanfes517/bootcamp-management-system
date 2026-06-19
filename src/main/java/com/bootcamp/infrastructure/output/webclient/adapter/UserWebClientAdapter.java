@@ -1,5 +1,6 @@
 package com.bootcamp.infrastructure.output.webclient.adapter;
 
+import com.bootcamp.domain.helper.exception.DateConflictException;
 import com.bootcamp.domain.helper.exception.DuplicateBootcampsException;
 import com.bootcamp.domain.helper.exception.UserNotExistsException;
 import com.bootcamp.domain.model.Bootcamp;
@@ -31,6 +32,9 @@ public class UserWebClientAdapter implements IUserExternalServicePort {
                         response.bodyToMono(ExceptionResponseDTO.class)
                                 .flatMap(ex -> Mono.error(new DuplicateBootcampsException(
                                         ex.getMessage(), ex.getDetails()))))
+                .onStatus(status -> status.value() == 400, response ->
+                        response.bodyToMono(ExceptionResponseDTO.class)
+                                .flatMap(ex -> Mono.error(new DateConflictException(ex.getDetails()))))
                 .bodyToMono(String.class);
     }
 }

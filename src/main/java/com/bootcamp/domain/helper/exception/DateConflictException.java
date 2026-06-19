@@ -17,4 +17,10 @@ public class DateConflictException extends RuntimeException {
         this.statusCode = DomainConstants.BAD_REQUEST_VALUE;
         this.details = Map.of(DomainConstants.CONFLICT_BOOTCAMPS_STRING, conflictIds.toString());
     }
+
+    public DateConflictException(Map<String, String> details) {
+        super(DomainConstants.DATE_CONFLICT_MESSAGE);
+        this.statusCode = DomainConstants.BAD_REQUEST_VALUE;
+        this.details = details;
+    }
 }
